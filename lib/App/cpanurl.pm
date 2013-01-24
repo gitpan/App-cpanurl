@@ -1,13 +1,13 @@
 use 5.008001;
 package App::cpanurl;
 
-our $VERSION = '0.01';
+our $VERSION = '0.03';
 
 1;
 
 =head1 NAME
 
-App::cpanurl - Get module URL from name and version
+App::cpanurl - Get distribution URL from module name and version
 
 =head1 CAUTION
 
@@ -17,7 +17,11 @@ B<This module is alpha release. Features will be changed without warnings.>
 
   # http://cpan.metacpan.org/authors/id/S/SR/SRI/Mojolicious-3.82.tar.gz
   cpanurl Mojolicious 3.82
-  
+
+  # http://cpan.metacpan.org/authors/id/G/GA/GAAS/libwww-perl-6.04.tar.gz
+  cpanurl LWP 6.04
+  cpanurl libwww-perl-6.04
+
   # http://cpan.metacpan.org/authors/id/S/SR/SRI/Mojolicious-3.82.tar.gz
   # http://cpan.metacpan.org/authors/id/K/KI/KIMOTO/DBIx-Custom-0.23.tar.gz
   cpanurl -f module.txt
@@ -68,6 +72,7 @@ And use C<-f> option to read this file.
 =head2 Module name is different from distribution name
 
 Some module name is different from disttribution name.
+C<cpanurl> is automatically resolve this relation.
 
   # Module name       Distribution name
   LWP                 libwww-perl
@@ -76,15 +81,33 @@ Some module name is different from disttribution name.
   File::Spec          PathTools
   List::Util          Scalar-List-Utils
   Scalar::Util        Scalar-List-Utils
+  Template            Template-Toolkit
 
-For example, the following command failed.
+If you want to use distribution name, pass one argument.
+  
+  cpanurl libwww-perl-6.04
 
-  # Fail!
+You can use Module name or distribution name.
+  
+  # both OK
   cpanurl LWP 6.04
+  cpanurl libwww-perl-6.04
+  
+  # both OK
+  cpanurl Cwd 3.40
+  cpanurl PathTools-3.40
 
-You must use distribution name in this case.
+=head2 When URL is passwd to argument
 
-  cpanurl libwww-perl 6.04
+  cpanurl http://somehost.com/Foo-0.01.tar.gz
+  cpanurl https://somehost.com/Foo-0.01.tar.gz
+
+If URL which start C<http://> or C<https://> is passed to argument,
+That URL is passed through to output.
+  
+  # Output
+  http://somehost.com/Foo-0.01.tar.gz
+  https://somehost.com/Foo-0.01.tar.gz
 
 =head2 HTTP client
 
